@@ -1,0 +1,29 @@
+.custom-datepicker {
+    width: 100%;
+  }
+  
+  .custom-datepicker .MuiInputBase-input {
+    padding: 11px;
+    font-size: 13px;
+  }
+  
+
+  .MuiTableCell-root.css-1ex1afd-MuiTableCell-root,
+  .MuiTableCell-body.css-1ex1afd-MuiTableCell-root,
+  .MuiTableCell-sizeMedium.css-1ex1afd-MuiTableCell-root {
+    padding: 8px !important; 
+  
+  }
+
+
+  .MuiTableCell-root.MuiTableCell-head {
+    /* background-color: #43468B; */
+    color: #ffff;
+    padding-left: 5px;
+    padding: 12px;
+  }
+  
+  .MuiTextField-root .MuiInput-root {
+    border: 1px solid #ccc;
+  }
+ 
