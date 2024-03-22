@@ -5485,10 +5485,10 @@ Section : {current_student?.joining_details?.section?.section_name}
                     ? "gray"
                     : "white",
               }}
-              disabled={
-                current_coscholasticpretoukg &&
-                current_coscholasticpretoukg[0]?.[term]?.status === "Finish"
-              }
+              // disabled={
+              //   current_coscholasticpretoukg &&
+              //   current_coscholasticpretoukg[0]?.[term]?.status === "Finish"
+              // }
             >
               Save Draft
             </Button>
@@ -5509,11 +5509,11 @@ Section : {current_student?.joining_details?.section?.section_name}
                     ? "gray"
                     : "white",
               }}
-              disabled={
-                !isAllFieldsFilled() ||
-                (current_coscholasticpretoukg &&
-                  current_coscholasticpretoukg[0]?.[term]?.status === "Finish")
-              }
+              // disabled={
+              //   !isAllFieldsFilled() ||
+              //   (current_coscholasticpretoukg &&
+              //     current_coscholasticpretoukg[0]?.[term]?.status === "Finish")
+              // }
             >
               Finish
             </Button>

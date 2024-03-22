@@ -111,14 +111,14 @@ const [scholasticData, setScholasticData] = useState({
   social_skills_total_grade:'',
   written_expression_total_marks:0,
   written_expression_total_grade:'',
-  abacus_total_marks:0,
+  abacus_total_marks: 0,
   abacus_total_grade:'',
  
 });
 
 
 const isAllFieldsFilled = () => {
-  return Object.values(scholasticData).every((value) => value !== undefined && value !== null && value !== '');
+  return Object.values(scholasticData).some((value) => value !== undefined && value !== null && value !== '');
 };
 
 
@@ -230,25 +230,18 @@ useEffect(() => {
   const extractTotalMarksAndGrade = (data, category, subcategory) => {
       const marks = data[0]?.[term]?.[category]?.[subcategory]?.marks ;
       const grade = data[0]?.[term]?.[category]?.[subcategory]?.grade || "";
-      return marks === 12 ? "AB" : marks === 11 ? "NT" : marks || "";
+      return marks;
   };
 
     setScholasticData({ 
       vocabulary_marks: extractMarksAndGrade(current_coscholastic1to4, "reading", "vocabulary"),
       vocabulary_grade: current_coscholastic1to4[0]?.[term]?.reading?.vocabulary?.grade || '',
-   
       read_marks: extractMarksAndGrade(current_coscholastic1to4, "reading", "what_to_read"),
       read_grade: current_coscholastic1to4[0]?.[term]?.reading?.what_to_read?.grade || '',
-
-   
       fluently_marks: extractMarksAndGrade(current_coscholastic1to4, "reading", "reads_fluently"),
       fluently_grade: current_coscholastic1to4[0]?.[term]?.reading?.reads_fluently?.grade || '',
-
-
       skills_marks: extractMarksAndGrade(current_coscholastic1to4, "reading", "phonic_skills"),
       skills_grade: current_coscholastic1to4[0]?.[term]?.reading?.phonic_skills?.grade || '',
-
-
       reading_total_marks: extractTotalMarksAndGrade(current_coscholastic1to4, "reading", "reading_total"),
       reading_total_grade: current_coscholastic1to4[0]?.[term]?.reading?.reading_total?.grade || '',
 
@@ -307,7 +300,7 @@ useEffect(() => {
       self_grade: current_coscholastic1to4[0]?.[term]?.social_skills?.self_control?.grade || '',
       respect_marks: extractMarksAndGrade(current_coscholastic1to4, "social_skills", "respect_to_self_others"),
       respect_grade: current_coscholastic1to4[0]?.[term]?.social_skills?.respect_to_self_others?.grade || '',
-      social_skills_total_marks: current_coscholastic1to4[0]?.[term]?.social_skills?.social_skills_total?.marks || '',
+      social_skills_total_marks: extractTotalMarksAndGrade(current_coscholastic1to4, "social_skills", "social_skills_total"),
       social_skills_total_grade: current_coscholastic1to4[0]?.[term]?.social_skills?.social_skills_total?.grade || '',
       
 
@@ -317,7 +310,7 @@ useEffect(() => {
       punctuation_grade: current_coscholastic1to4[0]?.[term]?.written_expression?.punctuation_correctly?.grade || '',
       sentences_marks: extractMarksAndGrade(current_coscholastic1to4, "written_expression", "complete_sentences"),
       sentences_grade: current_coscholastic1to4[0]?.[term]?.written_expression?.complete_sentences?.grade || '',
-      written_expression_total_marks: current_coscholastic1to4[0]?.[term]?.written_expression?.written_expression_total?.marks || '',
+      written_expression_total_marks: extractTotalMarksAndGrade(current_coscholastic1to4, "written_expression", "abacus_total"),
       written_expression_total_grade: current_coscholastic1to4[0]?.[term]?.written_expression?.written_expression_total?.grade || '',
       
 
@@ -327,8 +320,9 @@ useEffect(() => {
       beads_grade: current_coscholastic1to4[0]?.[term]?.Abacus?.able_to_add_subtract?.grade || '',
       visualise_marks: extractMarksAndGrade(current_coscholastic1to4, "Abacus", "able_to_visualise"),
       visualise_grade: current_coscholastic1to4[0]?.[term]?.Abacus?.able_to_visualise?.grade || '',
-      abacus_total_marks: current_coscholastic1to4[0]?.[term]?.Abacus?.abacus_total?.marks || '',
+      abacus_total_marks: extractTotalMarksAndGrade(current_coscholastic1to4, "Abacus", "abacus_total"),
       abacus_total_grade: current_coscholastic1to4[0]?.[term]?.Abacus?.abacus_total?.grade || '',
+      
       
 
       remarks: current_coscholastic1to4[0]?.[term]?.remarks|| '',
@@ -343,7 +337,7 @@ useEffect(() => {
 
 const onFinish = (e) => {
     e.preventDefault();
-    console.log(term)
+   
     const convertMarks = (mark) => {
       return parseFloat(mark === "AB" ? 12 : mark === "NT" ? 11 : mark);
     };
@@ -602,7 +596,7 @@ const theme = createTheme({
 
         // Check if all marks are 'NT'
         if (divisionFactor === 0) {
-            total = "NT";
+            total = " ";
         }
         // Calculate grade based on total marks
         let grade = '';
@@ -618,9 +612,12 @@ const theme = createTheme({
                 grade = 'C';
             } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
                 grade = 'D';
-            } else if (gradeTotal >= 0 && gradeTotal <= 2) {
-                grade = 'E';
-            }
+            } else if (gradeTotal >= 1 && gradeTotal <= 2) {
+              grade = 'E';
+          }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
         } else {
             grade = total;
         }
@@ -685,9 +682,12 @@ const onChangeTotal1 = (fieldName, value) => {
               grade = 'C';
           } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
               grade = 'D';
-          } else if (gradeTotal >= 0 && gradeTotal <= 2) {
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
               grade = 'E';
           }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
       } else {
           grade = total;
       }
@@ -751,9 +751,12 @@ const onChangeTotal2 = (fieldName, value) => {
               grade = 'C';
           } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
               grade = 'D';
-          } else if (gradeTotal >= 0 && gradeTotal <= 2) {
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
               grade = 'E';
           }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
       } else {
           grade = total;
       }
@@ -816,9 +819,12 @@ const onChangeTotal3 = (fieldName, value) => {
               grade = 'C';
           } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
               grade = 'D';
-          } else if (gradeTotal >= 0 && gradeTotal <= 2) {
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
               grade = 'E';
           }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
       } else {
           grade = total;
       }
@@ -883,9 +889,12 @@ const onChangeTotal4 = (fieldName, value) => {
               grade = 'C';
           } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
               grade = 'D';
-          } else if (gradeTotal >= 0 && gradeTotal <= 2) {
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
               grade = 'E';
           }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
       } else {
           grade = total;
       }
@@ -932,7 +941,7 @@ const onChangeTotal5 = (fieldName, value) => {
 
       // Check if all marks are 'NT'
       if (divisionFactor === 0) {
-          total = "NT";
+          total = " ";
       }
 
       // Calculate grade based on total marks
@@ -949,9 +958,12 @@ const onChangeTotal5 = (fieldName, value) => {
               grade = 'C';
           } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
               grade = 'D';
-          } else if (gradeTotal >= 0 && gradeTotal <= 2) {
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
               grade = 'E';
           }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
       } else {
           grade = total;
       }
@@ -1016,9 +1028,12 @@ const onChangeTotal6 = (fieldName, value) => {
               grade = 'C';
           } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
               grade = 'D';
-          } else if (gradeTotal >= 0 && gradeTotal <= 2) {
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
               grade = 'E';
           }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
       } else {
           grade = total;
       }
@@ -1082,9 +1097,12 @@ const onChangeTotal7 = (fieldName, value) => {
               grade = 'C';
           } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
               grade = 'D';
-          } else if (gradeTotal >= 0 && gradeTotal <= 2) {
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
               grade = 'E';
           }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
       } else {
           grade = total;
       }
@@ -2568,7 +2586,7 @@ Section : {current_student?.joining_details?.section?.section_name}
   variant="contained"
   color="primary"
   style={{ ...buttonStyle, color: current_coscholastic1to4 && current_coscholastic1to4[0]?.[term]?.status === 'Finish' ? 'gray' : 'white' }}
-  disabled={current_coscholastic1to4 && current_coscholastic1to4[0]?.[term]?.status === 'Finish'}
+  // disabled={current_coscholastic1to4 && current_coscholastic1to4[0]?.[term]?.status === 'Finish'}
 >
   Save Draft
 </Button>
@@ -2584,7 +2602,7 @@ Section : {current_student?.joining_details?.section?.section_name}
     ...buttonStyle,
     color: !isAllFieldsFilled() || (current_coscholastic1to4 && current_coscholastic1to4[0]?.[term]?.status === 'Finish') ? 'gray' : 'white'
   }}
-  disabled={!isAllFieldsFilled() || (current_coscholastic1to4 && current_coscholastic1to4[0]?.[term]?.status === 'Finish')}
+  // disabled={!isAllFieldsFilled() || (current_coscholastic1to4 && current_coscholastic1to4[0]?.[term]?.status === 'Finish')}
 >
   Finish
 </Button>
