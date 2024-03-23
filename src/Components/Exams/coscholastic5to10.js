@@ -132,7 +132,7 @@ console.log(current_coscholastic5to10)
 console.log(scholasticData)
 
 const isAllFieldsFilled = () => {
-  return Object.values(scholasticData)?.every((value) => value !== undefined && value !== null && value !== '');
+  return Object.values(scholasticData)?.some((value) => value !== undefined && value !== null && value !== '');
 };
 
 
@@ -171,12 +171,12 @@ const { name, value } = event.target;
     }  else if (marks >= 8.1 && marks <= 10) {
         grade = 'A';
     } else {
-        grade = 'Error: Invalid Marks Range';
+        grade = ' ';
     }
   } else if (isNaN(marks)) {
-    grade = 'Error';
+    grade = ' ';
   } else {
-    grade = 'Error';
+    grade = ' ';
   }
 
   setScholasticData({
@@ -197,8 +197,8 @@ const getBackgroundColor = (grade) => {
     return '#D6CA6F';
   } else if (grade === 'E') {
     return '#F5821F';   
-  } else if (grade === 'Error') {
-    return 'black';     
+  } else if (grade === ' ') {
+    return 'white';     
   } else {
     return 'white';
   }
@@ -208,122 +208,136 @@ const getBackgroundColor = (grade) => {
 
 useEffect(() => {
 
-  if (current_coscholastic5to10) {
 
-    console.log(current_coscholastic5to10)
+
+    if (current_coscholastic5to10) {
+
+      const extractMarksAndGrade = (data, category, subcategory) => {
+        const marks = data[0]?.[term]?.[category]?.[subcategory]?.marks;
+        const grade = data[0]?.[term]?.[category]?.[subcategory]?.grade || "";
+        return marks === 12 ? "AB" : marks === 11 ? "NT" : marks || "";
+    };
+  
+    const extractTotalMarksAndGrade = (data, category, subcategory) => {
+        const marks = data[0]?.[term]?.[category]?.[subcategory]?.marks ;
+        const grade = data[0]?.[term]?.[category]?.[subcategory]?.grade || "";
+        return marks === 12 ? "AB" : marks === 11 ? "NT" : marks || "";
+    };
 
     setScholasticData({ 
-      vocabulary_marks:current_coscholastic5to10[0]?.[term]?.reading?.vocabulary?.marks || '',
+      vocabulary_marks: extractMarksAndGrade(current_coscholastic5to10, "reading", "vocabulary"),
       vocabulary_grade: current_coscholastic5to10[0]?.[term]?.reading?.vocabulary?.grade || '',
-      read_marks: current_coscholastic5to10[0]?.[term]?.reading?.what_to_read?.marks  || '',
+      read_marks: extractMarksAndGrade(current_coscholastic5to10, "reading", "what_to_read"),
       read_grade: current_coscholastic5to10[0]?.[term]?.reading?.what_to_read?.grade || '',
-      fluently_marks:current_coscholastic5to10[0]?.[term]?.reading?.reads_fluently?.marks || '',
+      fluently_marks: extractMarksAndGrade(current_coscholastic5to10, "reading", "reads_fluently"),
       fluently_grade: current_coscholastic5to10[0]?.[term]?.reading?.reads_fluently?.grade || '',
-      skills_marks: current_coscholastic5to10[0]?.[term]?.reading?.phonic_skills?.marks  || '',
+      skills_marks: extractMarksAndGrade(current_coscholastic5to10, "reading", "phonic_skills"),
       skills_grade: current_coscholastic5to10[0]?.[term]?.reading?.phonic_skills?.grade || '',
-      reading_total_marks: current_coscholastic5to10[0]?.[term]?.reading?.reading_total?.marks || '',
+      reading_total_marks: extractTotalMarksAndGrade(current_coscholastic5to10, "reading", "reading_total"),
       reading_total_grade: current_coscholastic5to10[0]?.[term]?.reading?.reading_total?.grade || '',
 
-      attentively_marks:current_coscholastic5to10[0]?.[term]?.work_skills?.listens_attentively?.marks || '',
+      attentively_marks: extractMarksAndGrade(current_coscholastic5to10, "work_skills", "listens_attentively"),
       attentively_grade: current_coscholastic5to10[0]?.[term]?.work_skills?.listens_attentively?.grade || '',
-      directions_marks: current_coscholastic5to10[0]?.[term]?.work_skills?.follows_directions?.marks  || '',
+      directions_marks: extractMarksAndGrade(current_coscholastic5to10, "work_skills", "follows_directions"),
       directions_grade: current_coscholastic5to10[0]?.[term]?.work_skills?.follows_directions?.grade || '',
-      independently_marks:current_coscholastic5to10[0]?.[term]?.work_skills?.Work_well_independently?.marks || '',
+      independently_marks: extractMarksAndGrade(current_coscholastic5to10, "work_skills", "Work_well_independently"),
       independently_grade: current_coscholastic5to10[0]?.[term]?.work_skills?.Work_well_independently?.grade || '',
-      time_marks: current_coscholastic5to10[0]?.[term]?.work_skills?.assignments_on_time?.marks  || '',
+      time_marks: extractMarksAndGrade(current_coscholastic5to10, "work_skills", "assignments_on_time"),
       time_grade: current_coscholastic5to10[0]?.[term]?.work_skills?.assignments_on_time?.grade || '',
-      neatly_marks:current_coscholastic5to10[0]?.[term]?.work_skills?.does_work_neatly?.marks || '',
+      neatly_marks: extractMarksAndGrade(current_coscholastic5to10, "work_skills", "does_work_neatly"),
       neatly_grade: current_coscholastic5to10[0]?.[term]?.work_skills?.does_work_neatly?.grade || '',
-      work_skills_total_marks:current_coscholastic5to10[0]?.[term]?.work_skills?.work_skills_total?.marks || '',
+      work_skills_total_marks: extractTotalMarksAndGrade(current_coscholastic5to10, "work_skills", "work_skills_total"),
       work_skills_total_grade: current_coscholastic5to10[0]?.[term]?.work_skills?.work_skills_total?.grade || '',
 
-
-      computer_marks: current_coscholastic5to10[0]?.[term]?.specials?.computer?.marks  || '',
+      computer_marks: extractMarksAndGrade(current_coscholastic5to10, "specials", "computer"),
       computer_grade: current_coscholastic5to10[0]?.[term]?.specials?.computer?.grade || '',
-      science_marks: current_coscholastic5to10[0]?.[term]?.specials?.moral_science?.marks  || '',
+      science_marks: extractMarksAndGrade(current_coscholastic5to10, "specials", "moral_science"),
       science_grade: current_coscholastic5to10[0]?.[term]?.specials?.moral_science?.grade || '',
-      education_marks:current_coscholastic5to10[0]?.[term]?.specials?.physical_education?.marks || '',
+      education_marks: extractMarksAndGrade(current_coscholastic5to10, "specials", "physical_education"),
       education_grade: current_coscholastic5to10[0]?.[term]?.specials?.physical_education?.grade || '',
-      knowledge_marks: current_coscholastic5to10[0]?.[term]?.specials?.general_knowledge?.marks  || '',
+      knowledge_marks: extractMarksAndGrade(current_coscholastic5to10, "specials", "general_knowledge"),
       knowledge_grade: current_coscholastic5to10[0]?.[term]?.specials?.general_knowledge?.grade || '',
-      drawing_marks:current_coscholastic5to10[0]?.[term]?.specials?.drawing?.marks || '',
+      drawing_marks: extractMarksAndGrade(current_coscholastic5to10, "specials", "drawing"),
       drawing_grade: current_coscholastic5to10[0]?.[term]?.specials?.drawing?.grade || '',
-      specials_total_marks:current_coscholastic5to10[0]?.[term]?.specials?.specials_total?.marks || '',
+      specials_total_marks: extractTotalMarksAndGrade(current_coscholastic5to10, "specials", "specials_total"),
       specials_total_grade: current_coscholastic5to10[0]?.[term]?.specials?.specials_total?.grade || '',
 
 
-      english_marks: current_coscholastic5to10[0]?.[term]?.project_activity?.English?.marks  || '',
+      english_marks: extractMarksAndGrade(current_coscholastic5to10, "project_activity", "English"),
       english_grade: current_coscholastic5to10[0]?.[term]?.project_activity?.English?.grade || '',
-      math_marks:current_coscholastic5to10[0]?.[term]?.project_activity?.Math?.marks || '',
+      math_marks: extractMarksAndGrade(current_coscholastic5to10, "project_activity", "Math"),
       math_grade: current_coscholastic5to10[0]?.[term]?.project_activity?.Math?.grade || '',
-      evs_marks: current_coscholastic5to10[0]?.[term]?.project_activity?.E_V_S?.marks  || '',
+      evs_marks: extractMarksAndGrade(current_coscholastic5to10, "project_activity", "E_V_S"),
       evs_grade: current_coscholastic5to10[0]?.[term]?.project_activity?.E_V_S?.grade || '',
-      craft_marks:current_coscholastic5to10[0]?.[term]?.project_activity?.events_and_celebrations?.marks || '',
+      craft_marks: extractMarksAndGrade(current_coscholastic5to10, "project_activity", "events_and_celebrations"),
       craft_grade: current_coscholastic5to10[0]?.[term]?.project_activity?.events_and_celebrations?.grade || '',
-      project_activity_total_marks:current_coscholastic5to10[0]?.[term]?.project_activity?.project_activity_total?.marks || '',
+      project_activity_total_marks: extractTotalMarksAndGrade(current_coscholastic5to10, "project_activity", "project_activity_total"),
       project_activity_total_grade: current_coscholastic5to10[0]?.[term]?.project_activity?.project_activity_total?.grade || '',
 
 
-      words_marks: current_coscholastic5to10[0]?.[term]?.spelling?.words_correctly?.marks  || '',
+      words_marks: extractMarksAndGrade(current_coscholastic5to10, "spelling", "words_correctly"),
       words_grade: current_coscholastic5to10[0]?.[term]?.spelling?.words_correctly?.grade || '',
-      spelling_marks:current_coscholastic5to10[0]?.[term]?.spelling?.spelling_skills?.marks || '',
+      spelling_marks: extractMarksAndGrade(current_coscholastic5to10, "spelling", "spelling_skills"),
       spelling_grade: current_coscholastic5to10[0]?.[term]?.spelling?.spelling_skills?.grade || '',
-      spelling_total_marks:current_coscholastic5to10[0]?.[term]?.spelling?.spelling_total?.marks || '',
+      spelling_total_marks: extractTotalMarksAndGrade(current_coscholastic5to10, "spelling", "spelling_total"),
       spelling_total_grade: current_coscholastic5to10[0]?.[term]?.spelling?.spelling_total?.grade || '',
 
 
-      school_marks: current_coscholastic5to10[0]?.[term]?.social_skills?.school_rules?.marks  || '',
+      school_marks: extractMarksAndGrade(current_coscholastic5to10, "social_skills", "school_rules"),
       school_grade: current_coscholastic5to10[0]?.[term]?.social_skills?.school_rules?.grade || '',
-      self_marks:current_coscholastic5to10[0]?.[term]?.social_skills?.self_control?.marks || '',
+      self_marks: extractMarksAndGrade(current_coscholastic5to10, "social_skills", "self_control"),
       self_grade: current_coscholastic5to10[0]?.[term]?.social_skills?.self_control?.grade || '',
-      respect_marks: current_coscholastic5to10[0]?.[term]?.social_skills?.respect_to_self_others?.marks  || '',
+      respect_marks: extractMarksAndGrade(current_coscholastic5to10, "social_skills", "respect_to_self_others"),
       respect_grade: current_coscholastic5to10[0]?.[term]?.social_skills?.respect_to_self_others?.grade || '',
-      social_skills_total_marks: current_coscholastic5to10[0]?.[term]?.social_skills?.social_skills_total?.marks  || '',
+      social_skills_total_marks: current_coscholastic5to10[0]?.[term]?.social_skills?.social_skills_total?.marks || '',
       social_skills_total_grade: current_coscholastic5to10[0]?.[term]?.social_skills?.social_skills_total?.grade || '',
 
 
-      letters_marks:current_coscholastic5to10[0]?.[term]?.written_expression?.letters_correctly?.marks || '',
+      letters_marks: extractMarksAndGrade(current_coscholastic5to10, "written_expression", "letters_correctly"),
       letters_grade: current_coscholastic5to10[0]?.[term]?.written_expression?.letters_correctly?.grade || '',
-      punctuation_marks: current_coscholastic5to10[0]?.[term]?.written_expression?.punctuation_correctly?.marks  || '',
+      punctuation_marks: extractMarksAndGrade(current_coscholastic5to10, "written_expression", "punctuation_correctly"),
       punctuation_grade: current_coscholastic5to10[0]?.[term]?.written_expression?.punctuation_correctly?.grade || '',
-      sentences_marks:current_coscholastic5to10[0]?.[term]?.written_expression?.complete_sentences?.marks || '',
+      sentences_marks: extractMarksAndGrade(current_coscholastic5to10, "written_expression", "complete_sentences"),
       sentences_grade: current_coscholastic5to10[0]?.[term]?.written_expression?.complete_sentences?.grade || '',
-      written_expression_total_marks:current_coscholastic5to10[0]?.[term]?.written_expression?.written_expression_total?.marks || '',
+      written_expression_total_marks: current_coscholastic5to10[0]?.[term]?.written_expression?.written_expression_total?.marks || '',
       written_expression_total_grade: current_coscholastic5to10[0]?.[term]?.written_expression?.written_expression_total?.grade || '',
 
-
-      concept_marks: current_coscholastic5to10[0]?.[term]?.vedic_maths?.Clear_with_the_concept?.marks  || '',
+      concept_marks: extractMarksAndGrade(current_coscholastic5to10, "vedic_maths", "Clear_with_the_concept"),
       concept_grade: current_coscholastic5to10[0]?.[term]?.vedic_maths?.Clear_with_the_concept?.grade || '',
-      accuracy_marks:current_coscholastic5to10[0]?.[term]?.vedic_maths?.speed_accuracy?.marks || '',
+      accuracy_marks: extractMarksAndGrade(current_coscholastic5to10, "vedic_maths", "speed_accuracy"),
       accuracy_grade: current_coscholastic5to10[0]?.[term]?.vedic_maths?.speed_accuracy?.grade || '',
-      numerical_marks: current_coscholastic5to10[0]?.[term]?.vedic_maths?.numerical_tables?.marks  || '',
+      numerical_marks: extractMarksAndGrade(current_coscholastic5to10, "vedic_maths", "numerical_tables"),
       numerical_grade: current_coscholastic5to10[0]?.[term]?.vedic_maths?.numerical_tables?.grade || '',
-      vedic_maths_total_marks: current_coscholastic5to10[0]?.[term]?.vedic_maths?.vedic_maths_total?.marks  || '',
+      vedic_maths_total_marks: current_coscholastic5to10[0]?.[term]?.vedic_maths?.vedic_maths_total?.marks || '',
       vedic_maths_total_grade: current_coscholastic5to10[0]?.[term]?.vedic_maths?.vedic_maths_total?.grade || '',
+      
 
 
-      reading_english_marks: current_coscholastic5to10[0]?.[term]?.Reading?.english?.marks  || '',
+      reading_english_marks: extractMarksAndGrade(current_coscholastic5to10, "Reading", "english"),
       reading_english_grade: current_coscholastic5to10[0]?.[term]?.Reading?.english?.grade || '',
-      reading_kannada_marks:current_coscholastic5to10[0]?.[term]?.Reading?.kannada?.marks || '',
+      reading_kannada_marks: extractMarksAndGrade(current_coscholastic5to10, "Reading", "kannada"),
       reading_kannada_grade: current_coscholastic5to10[0]?.[term]?.Reading?.kannada?.grade || '',
-      reading_hindi_marks: current_coscholastic5to10[0]?.[term]?.Reading?.hindi?.marks  || '',
+      reading_hindi_marks: extractMarksAndGrade(current_coscholastic5to10, "Reading", "hindi"),
       reading_hindi_grade: current_coscholastic5to10[0]?.[term]?.Reading?.hindi?.grade || '',
-      Reading_total_marks: current_coscholastic5to10[0]?.[term]?.Reading?.Reading_Total?.marks  || '',
+      Reading_total_marks: current_coscholastic5to10[0]?.[term]?.Reading?.Reading_Total?.marks || '',
       Reading_total_grade: current_coscholastic5to10[0]?.[term]?.Reading?.Reading_Total?.grade || '',
+      
 
-      dictation_english_marks: current_coscholastic5to10[0]?.[term]?.Dictation?.english?.marks  || '',
+      dictation_english_marks: extractMarksAndGrade(current_coscholastic5to10, "Dictation", "english"),
       dictation_english_grade: current_coscholastic5to10[0]?.[term]?.Dictation?.english?.grade || '',
-      dictation_kannada_marks:current_coscholastic5to10[0]?.[term]?.Dictation?.kannada?.marks || '',
+      dictation_kannada_marks: extractMarksAndGrade(current_coscholastic5to10, "Dictation", "kannada"),
       dictation_kannada_grade: current_coscholastic5to10[0]?.[term]?.Dictation?.kannada?.grade || '',
-      dictation_hindi_marks: current_coscholastic5to10[0]?.[term]?.Dictation?.hindi?.marks  || '',
+      dictation_hindi_marks: extractMarksAndGrade(current_coscholastic5to10, "Dictation", "hindi"),
       dictation_hindi_grade: current_coscholastic5to10[0]?.[term]?.Dictation?.hindi?.grade || '',
-      Dictation_total_marks: current_coscholastic5to10[0]?.[term]?.Dictation?.Dictation_total?.marks  || '',
+      Dictation_total_marks: current_coscholastic5to10[0]?.[term]?.Dictation?.Dictation_total?.marks || '',
       Dictation_total_grade: current_coscholastic5to10[0]?.[term]?.Dictation?.Dictation_total?.grade || '',
+      
 
       remarks: current_coscholastic5to10[0]?.[term]?.remarks|| '',
       attendence: current_coscholastic5to10[0]?.[term]?.attendence|| '',
 
     });
+
   }
 }, [current_coscholastic5to10]);
 
@@ -333,28 +347,31 @@ useEffect(() => {
 const onFinish = (e) => {
     e.preventDefault();
 
-    console.log(term)
+    const convertMarks = (mark) => {
+      return parseFloat(mark === "AB" ? 12 : mark === "NT" ? 11 : mark);
+    };
+
     const coscholasticData ={
       [term] :{
       reading:{
       vocabulary:{
-      marks: parseFloat(scholasticData.vocabulary_marks),
+      marks: convertMarks(scholasticData.vocabulary_marks),
       grade:scholasticData.vocabulary_grade
       },
       what_to_read:{
-      marks: parseFloat(scholasticData.read_marks),
+      marks: convertMarks(scholasticData.read_marks),
       grade:scholasticData.read_grade
       },
       reads_fluently:{
-      marks: parseFloat(scholasticData.fluently_marks),
+      marks: convertMarks(scholasticData.fluently_marks),
       grade:scholasticData.fluently_grade
       },
       phonic_skills:{
-      marks: parseFloat(scholasticData.skills_marks),
+      marks: convertMarks(scholasticData.skills_marks),
       grade:scholasticData.skills_grade
       },
       reading_total:{
-      marks: parseFloat(scholasticData.reading_total_marks),
+      marks: convertMarks(scholasticData.reading_total_marks),
       grade:scholasticData.reading_total_grade
       },
 
@@ -362,27 +379,27 @@ const onFinish = (e) => {
 
       work_skills:{
       listens_attentively:{
-      marks: parseFloat(scholasticData.attentively_marks),
+      marks: convertMarks(scholasticData.attentively_marks),
       grade:scholasticData.attentively_grade
       },
       follows_directions:{
-      marks: parseFloat(scholasticData.directions_marks),
+      marks: convertMarks(scholasticData.directions_marks),
       grade:scholasticData.directions_grade
       },
       Work_well_independently:{
-      marks: parseFloat(scholasticData.independently_marks),
+      marks: convertMarks(scholasticData.independently_marks),
       grade:scholasticData.independently_grade
       },
       assignments_on_time:{
-      marks: parseFloat(scholasticData.time_marks),
+      marks: convertMarks(scholasticData.time_marks),
       grade:scholasticData.time_grade
       },
       does_work_neatly:{
-      marks: parseFloat(scholasticData.neatly_marks),
+      marks: convertMarks(scholasticData.neatly_marks),
       grade:scholasticData.neatly_grade
       },
       work_skills_total:{
-        marks: parseFloat(scholasticData.work_skills_total_marks),
+        marks: convertMarks(scholasticData.work_skills_total_marks),
         grade:scholasticData.work_skills_total_grade
         },
       },
@@ -390,27 +407,27 @@ const onFinish = (e) => {
 
       specials:{
       computer:{
-      marks: parseFloat(scholasticData.computer_marks),
+      marks: convertMarks(scholasticData.computer_marks),
       grade:scholasticData.computer_grade
       },
       moral_science:{
-      marks: parseFloat(scholasticData.science_marks),
+      marks: convertMarks(scholasticData.science_marks),
       grade:scholasticData.science_grade
       },
       physical_education:{
-      marks: parseFloat(scholasticData.education_marks),
+      marks: convertMarks(scholasticData.education_marks),
       grade:scholasticData.education_grade
       },      
       general_knowledge:{
-      marks: parseFloat(scholasticData.knowledge_marks),
+      marks: convertMarks(scholasticData.knowledge_marks),
       grade:scholasticData.knowledge_grade
       },  
       drawing:{
-      marks: parseFloat(scholasticData.drawing_marks),
+      marks: convertMarks(scholasticData.drawing_marks),
       grade:scholasticData.drawing_grade
       }, 
       specials_total:{
-        marks: parseFloat(scholasticData.specials_total_marks),
+        marks: convertMarks(scholasticData.specials_total_marks),
         grade:scholasticData.specials_total_grade
         },
       },
@@ -419,39 +436,39 @@ const onFinish = (e) => {
 
     project_activity:{
     English:{
-      marks: parseFloat(scholasticData.english_marks),
+      marks: convertMarks(scholasticData.english_marks),
       grade:scholasticData.english_grade
       }, 
       Math:{
-      marks: parseFloat(scholasticData.math_marks),
+      marks: convertMarks(scholasticData.math_marks),
       grade:scholasticData.math_grade
       }, 
       E_V_S:{
-      marks: parseFloat(scholasticData.evs_marks),
+      marks: convertMarks(scholasticData.evs_marks),
       grade:scholasticData.evs_grade
       }, 
       events_and_celebrations:{
-      marks: parseFloat(scholasticData.craft_marks),
+      marks: convertMarks(scholasticData.craft_marks),
       grade:scholasticData.craft_grade
       }, 
       project_activity_total:{
-        marks: parseFloat(scholasticData.project_activity_total_marks),
+        marks: convertMarks(scholasticData.project_activity_total_marks),
         grade:scholasticData.project_activity_total_grade
         },
       },
 
       spelling:{
       words_correctly:{
-      marks: parseFloat(scholasticData.words_marks),
+      marks: convertMarks(scholasticData.words_marks),
       grade:scholasticData.words_grade
       }, 
 
       spelling_skills:{
-      marks: parseFloat(scholasticData.spelling_marks),
+      marks: convertMarks(scholasticData.spelling_marks),
       grade:scholasticData.spelling_grade
       }, 
       spelling_total:{
-        marks: parseFloat(scholasticData.spelling_total_marks),
+        marks: convertMarks(scholasticData.spelling_total_marks),
         grade:scholasticData.spelling_total_grade
         },
       },
@@ -459,60 +476,60 @@ const onFinish = (e) => {
 
       social_skills:{  
       school_rules:{
-      marks: parseFloat(scholasticData.school_marks),
+      marks: convertMarks(scholasticData.school_marks),
       grade:scholasticData.school_grade
       }, 
 
       self_control:{
-      marks: parseFloat(scholasticData.self_marks),
+      marks: convertMarks(scholasticData.self_marks),
       grade:scholasticData.self_grade
       }, 
 
       respect_to_self_others:{
-      marks: parseFloat(scholasticData.respect_marks),
+      marks: convertMarks(scholasticData.respect_marks),
       grade:scholasticData.respect_grade
       } ,
       
       social_skills_total:{
-        marks: parseFloat(scholasticData.social_skills_total_marks),
+        marks: convertMarks(scholasticData.social_skills_total_marks),
         grade:scholasticData.social_skills_total_grade
         },
       },
 
       written_expression:{     
       letters_correctly:{
-      marks: parseFloat(scholasticData.letters_marks),
+      marks: convertMarks(scholasticData.letters_marks),
       grade:scholasticData.letters_grade
       }, 
       punctuation_correctly:{
-      marks: parseFloat(scholasticData.punctuation_marks),
+      marks: convertMarks(scholasticData.punctuation_marks),
       grade:scholasticData.punctuation_grade
       }, 
       complete_sentences:{
-      marks: parseFloat(scholasticData.sentences_marks),
+      marks: convertMarks(scholasticData.sentences_marks),
       grade:scholasticData.sentences_grade
       },      
       written_expression_total:{
-        marks: parseFloat(scholasticData.written_expression_total_marks),
+        marks: convertMarks(scholasticData.written_expression_total_marks),
         grade:scholasticData.written_expression_total_grade
         },
       },
 
       vedic_maths:{    
       Clear_with_the_concept:{
-      marks: parseFloat(scholasticData.concept_marks),
+      marks: convertMarks(scholasticData.concept_marks),
       grade:scholasticData.concept_grade
       }, 
       speed_accuracy:{
-      marks: parseFloat(scholasticData.accuracy_marks),
+      marks: convertMarks(scholasticData.accuracy_marks),
       grade:scholasticData.accuracy_grade
       }, 
       numerical_tables:{
-      marks: parseFloat(scholasticData.numerical_marks),
+      marks: convertMarks(scholasticData.numerical_marks),
       grade:scholasticData.numerical_grade
       }, 
       vedic_maths_total:{
-        marks: parseFloat(scholasticData.vedic_maths_total_marks),
+        marks: convertMarks(scholasticData.vedic_maths_total_marks),
         grade:scholasticData.vedic_maths_total_grade
         },
       
@@ -521,19 +538,19 @@ const onFinish = (e) => {
 
       Reading:{    
         english:{
-        marks: parseFloat(scholasticData.reading_english_marks),
+        marks: convertMarks(scholasticData.reading_english_marks),
         grade:scholasticData.reading_english_grade
         }, 
         kannada:{
-        marks: parseFloat(scholasticData.reading_kannada_marks),
+        marks: convertMarks(scholasticData.reading_kannada_marks),
         grade:scholasticData.reading_kannada_grade
         }, 
         hindi:{
-        marks: parseFloat(scholasticData.reading_hindi_marks),
+        marks: convertMarks(scholasticData.reading_hindi_marks),
         grade:scholasticData.reading_hindi_grade
         }, 
         Reading_Total:{
-          marks: parseFloat(scholasticData.Reading_total_marks),
+          marks: convertMarks(scholasticData.Reading_total_marks),
           grade:scholasticData.Reading_total_grade
           },
         
@@ -541,19 +558,19 @@ const onFinish = (e) => {
 
         Dictation:{    
             english:{
-            marks: parseFloat(scholasticData.dictation_english_marks),
+            marks: convertMarks(scholasticData.dictation_english_marks),
             grade:scholasticData.dictation_english_grade
             }, 
             kannada:{
-            marks: parseFloat(scholasticData.dictation_kannada_marks),
+            marks: convertMarks(scholasticData.dictation_kannada_marks),
             grade:scholasticData.dictation_kannada_grade
             }, 
             hindi:{
-            marks: parseFloat(scholasticData.dictation_hindi_marks),
+            marks: convertMarks(scholasticData.dictation_hindi_marks),
             grade:scholasticData.dictation_hindi_grade
             },  
             Dictation_total:{
-              marks: parseFloat(scholasticData.Dictation_total_marks),
+              marks: convertMarks(scholasticData.Dictation_total_marks),
               grade:scholasticData.Dictation_total_grade
               },      
             },
@@ -604,405 +621,677 @@ const theme = createTheme({
 
   const onChangeTotal = (fieldName, value) => {
     setScholasticData((prevFormData) => {
-    const updatedValues = {
-    ...prevFormData,
-    [fieldName]: value,
-    };  
-    const total =
-        parseFloat(updatedValues.vocabulary_marks) +
-        parseFloat(updatedValues.read_marks) +
-        parseFloat(updatedValues.fluently_marks) +
-        parseFloat(updatedValues.skills_marks);
-  
-        const gradeTotal = total/4
-
-        let grade = '';
-
-       
-        if (gradeTotal > 10) {
-          grade = 'Error';
-        } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
-          grade = 'A';
-        } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
-          grade = 'B';
-        } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
-          grade = 'C';
-        } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
-          grade = 'D';
-        } else if (gradeTotal >= 0 && gradeTotal <= 2) {
-          grade = 'E';
-        }
-        
-      return {
-        ...updatedValues,
-        reading_total_marks: total,
-        reading_total_grade: grade,
-      };
-      });
-      };
-
-      const onChangeTotal1 = (fieldName, value) => {
-        setScholasticData((prevFormData) => {
         const updatedValues = {
-        ...prevFormData,
-        [fieldName]: value,
-        };  
-        const total =
-            parseFloat(updatedValues.attentively_marks) +
-            parseFloat(updatedValues.directions_marks) +
-            parseFloat(updatedValues.independently_marks) +
-            parseFloat(updatedValues.time_marks) + 
-            parseFloat(updatedValues.neatly_marks);
-   
-            const gradeTotal = total/5
-
-            let grade = '';
-    
-            if (gradeTotal > 10) {
-              grade = 'Error';
-            } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
-              grade = 'A';
-            } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
-              grade = 'B';
-            } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
-              grade = 'C';
-            } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
-              grade = 'D';
-            } else if (gradeTotal >= 0 && gradeTotal <= 2) {
-              grade = 'E';
-            }
-
-
-          return {
-            ...updatedValues,
-            work_skills_total_marks: total,
-            work_skills_total_grade: grade,
-          };
-          });
-          };
-
-          const onChangeTotal2 = (fieldName, value) => {
-            setScholasticData((prevFormData) => {
-            const updatedValues = {
             ...prevFormData,
             [fieldName]: value,
-            };  
-            const total =
-                parseFloat(updatedValues.computer_marks) +
-                parseFloat(updatedValues.science_marks) +
-                parseFloat(updatedValues.education_marks) +
-                parseFloat(updatedValues.knowledge_marks) + 
-                parseFloat(updatedValues.drawing_marks);
-    
-          
-                const gradeTotal = total/5
+        };
 
-                let grade = '';
-                if (gradeTotal > 10) {
-                  grade = 'Error';
-                } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
-                  grade = 'A';
-                } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
-                  grade = 'B';
-                } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
-                  grade = 'C';
-                } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
-                  grade = 'D';
-                } else if (gradeTotal >= 0 && gradeTotal <= 2) {
-                  grade = 'E';
-                }
+        // Define the fields to be considered for calculation
+        const fieldsToConsider = ["vocabulary_marks", "read_marks", "fluently_marks", "skills_marks"];
 
-          
-              return {
-                ...updatedValues,
-                specials_total_marks: total,
-                specials_total_grade: grade,
-              };
-              });
-              };
+        let total = 0;
+        let divisionFactor = 0; // Initialize division factor to 0
+
+        // Calculate total of numeric values and count the division factor
+        fieldsToConsider.forEach((field) => {
+            const mark = updatedValues[field];
+            if (!isNaN(mark)) {
+                total += parseFloat(mark);
+                divisionFactor++; // Increment division factor for numeric values
+            } else if (mark === "AB") {
+                divisionFactor++; // Increment division factor for "AB" marks
+            }
+        });
+
+        // Check if all marks are 'NT'
+        if (divisionFactor === 0) {
+            total = "NT";
+        }
+        // Calculate grade based on total marks
+        let grade = '';
+        if (total !== "NT") {
+            const gradeTotal = total / divisionFactor; // Calculate the grade total considering division factor
+            if (gradeTotal > 10) {
+                grade = 'Error';
+            } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
+                grade = 'A';
+            } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
+                grade = 'B';
+            } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
+                grade = 'C';
+            } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
+                grade = 'D';
+            } else if (gradeTotal >= 1 && gradeTotal <= 2) {
+              grade = 'E';
+          }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
+        } else {
+            grade = total;
+        }
+
+        return {
+            ...updatedValues,
+            reading_total_marks: total,
+            reading_total_grade: grade,
+        };
+    });
+};
+
+const onChangeTotal1 = (fieldName, value) => {
+  setScholasticData((prevFormData) => {
+      const updatedValues = {
+          ...prevFormData,
+          [fieldName]: value,
+      };
+
+      const fieldsToConsider = ["attentively_marks", "directions_marks", "independently_marks", "time_marks", "neatly_marks"];
+
+      let total = 0;
+
+      fieldsToConsider.forEach((field) => {
+          const fieldValue = parseFloat(updatedValues[field]);
+          if (!isNaN(fieldValue)) {
+              total += fieldValue;
+          }
+      });
+
+      let divisionFactor = 0; // Initialize division factor to 0
+
+      // Calculate total of numeric values and count the division factor
+      fieldsToConsider.forEach((field) => {
+          const mark = updatedValues[field];
+          if (!isNaN(mark)) {
+              divisionFactor++; // Increment division factor for numeric values
+          } else if (mark === "AB") {
+              divisionFactor++; // Increment division factor for "AB" marks
+          }
+      });
+
+      // Check if all marks are 'NT'
+      if (divisionFactor === 0) {
+          total = "NT";
+      }
+
+      // Calculate grade based on total marks
+      let grade = '';
+      if (total !== "NT") {
+          const gradeTotal = total / divisionFactor; // Calculate the grade total considering division factor
+          if (gradeTotal > 10) {
+              grade = 'Error';
+          } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
+              grade = 'A';
+          } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
+              grade = 'B';
+          } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
+              grade = 'C';
+          } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
+              grade = 'D';
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
+              grade = 'E';
+          }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
+      } else {
+          grade = total;
+      }
+
+      return {
+          ...updatedValues,
+          work_skills_total_marks: total,
+          work_skills_total_grade: grade,
+      };
+  });
+};
+
+const onChangeTotal2 = (fieldName, value) => {
+  setScholasticData((prevFormData) => {
+      const updatedValues = {
+          ...prevFormData,
+          [fieldName]: value,
+      };
+
+      const fieldsToConsider = ["computer_marks", "science_marks", "education_marks", "knowledge_marks", "drawing_marks"];
+
+      let total = 0;
+
+      fieldsToConsider.forEach((field) => {
+          const fieldValue = parseFloat(updatedValues[field]);
+          if (!isNaN(fieldValue)) {
+              total += fieldValue;
+          }
+      });
+
+      let divisionFactor = 0; // Initialize division factor to 0
+
+      // Calculate total of numeric values and count the division factor
+      fieldsToConsider.forEach((field) => {
+          const mark = updatedValues[field];
+          if (!isNaN(mark)) {
+              divisionFactor++; // Increment division factor for numeric values
+          } else if (mark === "AB") {
+              divisionFactor++; // Increment division factor for "AB" marks
+          }
+      });
+
+      // Check if all marks are 'NT'
+      if (divisionFactor === 0) {
+          total = "NT";
+      }
+
+      // Calculate grade based on total marks
+      let grade = '';
+      if (total !== "NT") {
+          const gradeTotal = total / divisionFactor; // Calculate the grade total considering division factor
+          if (gradeTotal > 10) {
+              grade = 'Error';
+          } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
+              grade = 'A';
+          } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
+              grade = 'B';
+          } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
+              grade = 'C';
+          } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
+              grade = 'D';
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
+              grade = 'E';
+          }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
+      } else {
+          grade = total;
+      }
+
+      return {
+          ...updatedValues,
+          specials_total_marks: total,
+          specials_total_grade: grade,
+      };
+  });
+};
               
-              const onChangeTotal3 = (fieldName, value) => {
-                setScholasticData((prevFormData) => {
-                  const updatedValues = {
-                    ...prevFormData,
-                    [fieldName]: value,
-                  };
-              
-                  const total =
-                    parseFloat(updatedValues.english_marks) +
-                    parseFloat(updatedValues.math_marks) +
-                    parseFloat(updatedValues.evs_marks) +
-                    parseFloat(updatedValues.craft_marks);
-              
-                  const gradeTotal = total / 4;
-              
-                  let grade = '';
-              
-                  if (gradeTotal > 10) {
-                    grade = 'Error';
-                  } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
-                    grade = 'A';
-                  } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
-                    grade = 'B';
-                  } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
-                    grade = 'C';
-                  } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
-                    grade = 'D';
-                  } else if (gradeTotal >= 0 && gradeTotal <= 2) {
-                    grade = 'E';
-                  }
-              
-                  return {
-                    ...updatedValues,
-                    project_activity_total_marks: total,
-                    project_activity_total_grade: grade,
-                  };
-                });
-              };
+const onChangeTotal3 = (fieldName, value) => {
+  setScholasticData((prevFormData) => {
+      const updatedValues = {
+          ...prevFormData,
+          [fieldName]: value,
+      };
+
+      const fieldsToConsider = ["english_marks", "math_marks", "evs_marks", "craft_marks"];
+
+      let total = 0;
+
+      fieldsToConsider.forEach((field) => {
+          const fieldValue = parseFloat(updatedValues[field]);
+          if (!isNaN(fieldValue)) {
+              total += fieldValue;
+          }
+      });
+
+      let divisionFactor = 0; // Initialize division factor to 0
+
+      // Calculate total of numeric values and count the division factor
+      fieldsToConsider.forEach((field) => {
+          const mark = updatedValues[field];
+          if (!isNaN(mark)) {
+              divisionFactor++; // Increment division factor for numeric values
+          } else if (mark === "AB") {
+              divisionFactor++; // Increment division factor for "AB" marks
+          }
+      });
+
+      // Check if all marks are 'NT'
+      if (divisionFactor === 0) {
+          total = "NT";
+      }
+
+      // Calculate grade based on total marks
+      let grade = '';
+      if (total !== "NT") {
+          const gradeTotal = total / divisionFactor; // Calculate the grade total considering division factor
+          if (gradeTotal > 10) {
+              grade = 'Error';
+          } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
+              grade = 'A';
+          } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
+              grade = 'B';
+          } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
+              grade = 'C';
+          } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
+              grade = 'D';
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
+              grade = 'E';
+          }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
+      } else {
+          grade = total;
+      }
+
+      return {
+          ...updatedValues,
+          project_activity_total_marks: total,
+          project_activity_total_grade: grade,
+      };
+  });
+};
               
             
-                  const onChangeTotal4 = (fieldName, value) => {
-                    setScholasticData((prevFormData) => {
-                    const updatedValues = {
-                    ...prevFormData,
-                    [fieldName]: value,
-                    };  
-                    const total =
-                        parseFloat(updatedValues.words_marks) +
-                        parseFloat(updatedValues.spelling_marks)                
-                  
-                        const gradeTotal = total/2
+const onChangeTotal4 = (fieldName, value) => {
+  setScholasticData((prevFormData) => {
+      const updatedValues = {
+          ...prevFormData,
+          [fieldName]: value,
+      };  
 
-                        let grade = '';
+      const fieldsToConsider = ["words_marks", "spelling_marks"];
+
+      let total = 0;
+
+      fieldsToConsider.forEach((field) => {
+          const fieldValue = parseFloat(updatedValues[field]);
+          if (!isNaN(fieldValue)) {
+              total += fieldValue;
+          }
+      });
+
+      let divisionFactor = 0; // Initialize division factor to 0
+
+      // Calculate total of numeric values and count the division factor
+      fieldsToConsider.forEach((field) => {
+          const mark = updatedValues[field];
+          if (!isNaN(mark)) {
+              divisionFactor++; // Increment division factor for numeric values
+          } else if (mark === "AB") {
+              divisionFactor++; // Increment division factor for "AB" marks
+          }
+      });
+
+      // Check if all marks are 'NT'
+      if (divisionFactor === 0) {
+          total = "NT";
+      }
+
+      // Calculate grade based on total marks
+      let grade = '';
+      if (total !== "NT") {
+          const gradeTotal = total / divisionFactor; // Calculate the grade total considering division factor
+          if (gradeTotal > 10) {
+              grade = 'Error';
+          } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
+              grade = 'A';
+          } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
+              grade = 'B';
+          } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
+              grade = 'C';
+          } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
+              grade = 'D';
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
+              grade = 'E';
+          }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
+      } else {
+          grade = total;
+      }
+
+      return {
+          ...updatedValues,
+          spelling_total_marks: total,
+          spelling_total_grade: grade,
+      };
+  });
+};
+
+
+const onChangeTotal5 = (fieldName, value) => {
+  setScholasticData((prevFormData) => {
+      const updatedValues = {
+          ...prevFormData,
+          [fieldName]: value,
+      };
+
+      const fieldsToConsider = ["school_marks", "self_marks", "respect_marks"];
+
+      let total = 0;
+
+      fieldsToConsider.forEach((field) => {
+          const fieldValue = parseFloat(updatedValues[field]);
+          if (!isNaN(fieldValue)) {
+              total += fieldValue;
+          }
+      });
+
+      let divisionFactor = 0; // Initialize division factor to 0
+
+      // Calculate total of numeric values and count the division factor
+      fieldsToConsider.forEach((field) => {
+          const mark = updatedValues[field];
+          if (!isNaN(mark)) {
+              divisionFactor++; // Increment division factor for numeric values
+          } else if (mark === "AB") {
+              divisionFactor++; // Increment division factor for "AB" marks
+          }
+      });
+
+      // Check if all marks are 'NT'
+      if (divisionFactor === 0) {
+          total = "NT";
+      }
+
+      // Calculate grade based on total marks
+      let grade = '';
+      if (total !== "NT") {
+          const gradeTotal = total / divisionFactor; // Calculate the grade total considering division factor
+          if (gradeTotal > 10) {
+              grade = 'Error';
+          } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
+              grade = 'A';
+          } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
+              grade = 'B';
+          } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
+              grade = 'C';
+          } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
+              grade = 'D';
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
+              grade = 'E';
+          }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
+      } else {
+          grade = total;
+      }
+
+      return {
+          ...updatedValues,
+          social_skills_total_marks: total,
+          social_skills_total_grade: grade,
+      };
+  });
+};
+
+
                 
-                        if (gradeTotal > 10) {
-                          grade = 'Error';
-                        } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
-                          grade = 'A';
-                        } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
-                          grade = 'B';
-                        } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
-                          grade = 'C';
-                        } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
-                          grade = 'D';
-                        } else if (gradeTotal >= 0 && gradeTotal <= 2) {
-                          grade = 'E';
-                        }
 
 
+const onChangeTotal6 = (fieldName, value) => {
+  setScholasticData((prevFormData) => {
+      const updatedValues = {
+          ...prevFormData,
+          [fieldName]: value,
+      };
 
-                      return {
-                        ...updatedValues,
-                        spelling_total_marks: total,
-                        spelling_total_grade: grade,
-                      };
-                      });
-                      };
+      const fieldsToConsider = ["letters_marks", "punctuation_marks", "sentences_marks"];
 
-                      const onChangeTotal5 = (fieldName, value) => {
-                        setScholasticData((prevFormData) => {
-                        const updatedValues = {
-                        ...prevFormData,
-                        [fieldName]: value,
-                        };  
-                        const total =
-                            parseFloat(updatedValues.school_marks) +
-                            parseFloat(updatedValues.self_marks) +
-                            parseFloat(updatedValues.respect_marks) 
-                      
-                            const gradeTotal = total/3
+      let total = 0;
 
-                            let grade = '';
-                    
-                            
-                            if (gradeTotal > 10) {
-                              grade = 'Error';
-                            } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
-                              grade = 'A';
-                            } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
-                              grade = 'B';
-                            } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
-                              grade = 'C';
-                            } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
-                              grade = 'D';
-                            } else if (gradeTotal >= 0 && gradeTotal <= 2) {
-                              grade = 'E';
-                            }
+      fieldsToConsider.forEach((field) => {
+          const fieldValue = parseFloat(updatedValues[field]);
+          if (!isNaN(fieldValue)) {
+              total += fieldValue;
+          }
+      });
 
+      let divisionFactor = 0; // Initialize division factor to 0
 
+      // Calculate total of numeric values and count the division factor
+      fieldsToConsider.forEach((field) => {
+          const mark = updatedValues[field];
+          if (!isNaN(mark)) {
+              divisionFactor++; // Increment division factor for numeric values
+          } else if (mark === "AB") {
+              divisionFactor++; // Increment division factor for "AB" marks
+          }
+      });
 
-                          return {
-                            ...updatedValues,
-                            social_skills_total_marks: total,
-                            social_skills_total_grade: grade,
-                          };
-                          });
-                          };
+      // Check if all marks are 'NT'
+      if (divisionFactor === 0) {
+          total = "NT";
+      }
 
+      // Calculate grade based on total marks
+      let grade = '';
+      if (total !== "NT") {
+          const gradeTotal = total / divisionFactor; // Calculate the grade total considering division factor
+          if (gradeTotal > 10) {
+              grade = 'Error';
+          } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
+              grade = 'A';
+          } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
+              grade = 'B';
+          } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
+              grade = 'C';
+          } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
+              grade = 'D';
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
+              grade = 'E';
+          }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
+      } else {
+          grade = total;
+      }
 
-                
+      return {
+          ...updatedValues,
+          written_expression_total_marks: total,
+          written_expression_total_grade: grade,
+      };
+  });
+};
 
+         
 
-                          const onChangeTotal6 = (fieldName, value) => {
-                            setScholasticData((prevFormData) => {
-                            const updatedValues = {
-                            ...prevFormData,
-                            [fieldName]: value,
-                            };  
-                            const total =
-                                parseFloat(updatedValues.letters_marks) +
-                                parseFloat(updatedValues.punctuation_marks) +
-                                parseFloat(updatedValues.sentences_marks) 
-                          
-                                const gradeTotal = total/3
+const onChangeTotal7 = (fieldName, value) => {
+  setScholasticData((prevFormData) => {
+      const updatedValues = {
+          ...prevFormData,
+          [fieldName]: value,
+      };  
 
-                                let grade = '';
-                        
-                                
-                                if (gradeTotal > 10) {
-                                  grade = 'Error';
-                                } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
-                                  grade = 'A';
-                                } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
-                                  grade = 'B';
-                                } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
-                                  grade = 'C';
-                                } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
-                                  grade = 'D';
-                                } else if (gradeTotal >= 0 && gradeTotal <= 2) {
-                                  grade = 'E';
-                                }
+      const fieldsToConsider = ["concept_marks", "accuracy_marks", "numerical_marks"];
 
+      let total = 0;
 
-                              return {
-                                ...updatedValues,
-                                written_expression_total_marks: total,
-                                written_expression_total_grade: grade,
-                              };
-                              });
-                              };
+      fieldsToConsider.forEach((field) => {
+          const fieldValue = parseFloat(updatedValues[field]);
+          if (!isNaN(fieldValue)) {
+              total += fieldValue;
+          }
+      });
 
-                                        
-                      const onChangeTotal7 = (fieldName, value) => {
-                        setScholasticData((prevFormData) => {
-                        const updatedValues = {
-                        ...prevFormData,
-                        [fieldName]: value,
-                        };  
-                        const total =
-                            parseFloat(updatedValues.concept_marks) +
-                            parseFloat(updatedValues.accuracy_marks) +
-                            parseFloat(updatedValues.numerical_marks) 
-                      
-                            const gradeTotal = total/3
+      let divisionFactor = 0; // Initialize division factor to 0
 
-                            let grade = '';
-                    
-                           
-                            if (gradeTotal > 10) {
-                              grade = 'Error';
-                            } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
-                              grade = 'A';
-                            } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
-                              grade = 'B';
-                            } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
-                              grade = 'C';
-                            } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
-                              grade = 'D';
-                            } else if (gradeTotal >= 0 && gradeTotal <= 2) {
-                              grade = 'E';
-                            }
+      // Calculate total of numeric values and count the division factor
+      fieldsToConsider.forEach((field) => {
+          const mark = updatedValues[field];
+          if (!isNaN(mark)) {
+              divisionFactor++; // Increment division factor for numeric values
+          } else if (mark === "AB") {
+              divisionFactor++; // Increment division factor for "AB" marks
+          }
+      });
 
+      // Check if all marks are 'NT'
+      if (divisionFactor === 0) {
+          total = "NT";
+      }
 
+      // Calculate grade based on total marks
+      let grade = '';
+      if (total !== "NT") {
+          const gradeTotal = total / divisionFactor; // Calculate the grade total considering division factor
+          if (gradeTotal > 10) {
+              grade = 'Error';
+          } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
+              grade = 'A';
+          } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
+              grade = 'B';
+          } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
+              grade = 'C';
+          } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
+              grade = 'D';
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
+              grade = 'E';
+          }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
+      } else {
+          grade = total;
+      }
 
-                      
-                          return {
-                            ...updatedValues,
-                            vedic_maths_total_marks: total,
-                            vedic_maths_total_grade: grade,
-                          };
-                          });
-                          };
-
-                          const onChangeTotal8 = (fieldName, value) => {
-                            setScholasticData((prevFormData) => {
-                            const updatedValues = {
-                            ...prevFormData,
-                            [fieldName]: value,
-                            };  
-                            const total =
-                                parseFloat(updatedValues.reading_english_marks) +
-                                parseFloat(updatedValues.reading_kannada_marks) +
-                                parseFloat(updatedValues.reading_hindi_marks) 
-                          
-                                const gradeTotal = total/3
-
-                                let grade = '';
-                        
-                               
-                                if (gradeTotal > 10) {
-                                  grade = 'Error';
-                                } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
-                                  grade = 'A';
-                                } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
-                                  grade = 'B';
-                                } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
-                                  grade = 'C';
-                                } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
-                                  grade = 'D';
-                                } else if (gradeTotal >= 0 && gradeTotal <= 2) {
-                                  grade = 'E';
-                                }
+      return {
+          ...updatedValues,
+          vedic_maths_total_marks: total,
+          vedic_maths_total_grade: grade,
+      };
+  });
+};
 
 
+const onChangeTotal8 = (fieldName, value) => {
+  setScholasticData((prevFormData) => {
+      const updatedValues = {
+          ...prevFormData,
+          [fieldName]: value,
+      };  
 
-                              return {
-                                ...updatedValues,
-                                Reading_total_marks: total,
-                                Reading_total_grade: grade,
-                              };
-                              });
-                              };
+      const fieldsToConsider = ["reading_english_marks", "reading_kannada_marks", "reading_hindi_marks"];
 
-                              const onChangeTotal9 = (fieldName, value) => {
-                                setScholasticData((prevFormData) => {
-                                const updatedValues = {
-                                ...prevFormData,
-                                [fieldName]: value,
-                                };  
-                                const total =
-                                    parseFloat(updatedValues.dictation_english_marks) +
-                                    parseFloat(updatedValues.dictation_kannada_marks) +
-                                    parseFloat(updatedValues.dictation_hindi_marks) 
-                              
-                                    const gradeTotal = total/3
+      let total = 0;
 
-                                    let grade = '';
-                            
-                                    if (gradeTotal > 10) {
-                                      grade = 'Error';
-                                    } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
-                                      grade = 'A';
-                                    } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
-                                      grade = 'B';
-                                    } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
-                                      grade = 'C';
-                                    } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
-                                      grade = 'D';
-                                    } else if (gradeTotal >= 0 && gradeTotal <= 2) {
-                                      grade = 'E';
-                                    }
+      fieldsToConsider.forEach((field) => {
+          const fieldValue = parseFloat(updatedValues[field]);
+          if (!isNaN(fieldValue)) {
+              total += fieldValue;
+          }
+      });
 
+      let divisionFactor = 0; // Initialize division factor to 0
 
+      // Calculate total of numeric values and count the division factor
+      fieldsToConsider.forEach((field) => {
+          const mark = updatedValues[field];
+          if (!isNaN(mark)) {
+              divisionFactor++; // Increment division factor for numeric values
+          } else if (mark === "AB") {
+              divisionFactor++; // Increment division factor for "AB" marks
+          }
+      });
 
+      // Check if all marks are 'NT'
+      if (divisionFactor === 0) {
+          total = "NT";
+      }
 
-                                  return {
-                                    ...updatedValues,
-                                    Dictation_total_marks: total,
-                                    Dictation_total_grade: grade,
-                                  };
-                                  });
-                                  };
+      // Calculate grade based on total marks
+      let grade = '';
+      if (total !== "NT") {
+          const gradeTotal = total / divisionFactor; // Calculate the grade total considering division factor
+          if (gradeTotal > 10) {
+              grade = 'Error';
+          } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
+              grade = 'A';
+          } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
+              grade = 'B';
+          } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
+              grade = 'C';
+          } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
+              grade = 'D';
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
+              grade = 'E';
+          }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
+      } else {
+          grade = total;
+      }
+
+      return {
+          ...updatedValues,
+          Reading_total_marks: total,
+          Reading_total_grade: grade,
+      };
+  });
+};
+                   
+const onChangeTotal9 = (fieldName, value) => {
+  setScholasticData((prevFormData) => {
+      const updatedValues = {
+          ...prevFormData,
+          [fieldName]: value,
+      };  
+
+      const fieldsToConsider = ["dictation_english_marks", "dictation_kannada_marks", "dictation_hindi_marks"];
+
+      let total = 0;
+
+      fieldsToConsider.forEach((field) => {
+          const fieldValue = parseFloat(updatedValues[field]);
+          if (!isNaN(fieldValue)) {
+              total += fieldValue;
+          }
+      });
+
+      let divisionFactor = 0; // Initialize division factor to 0
+
+      // Calculate total of numeric values and count the division factor
+      fieldsToConsider.forEach((field) => {
+          const mark = updatedValues[field];
+          if (!isNaN(mark)) {
+              divisionFactor++; // Increment division factor for numeric values
+          } else if (mark === "AB") {
+              divisionFactor++; // Increment division factor for "AB" marks
+          }
+      });
+
+      // Check if all marks are 'NT'
+      if (divisionFactor === 0) {
+          total = "NT";
+      }
+
+      // Calculate grade based on total marks
+      let grade = '';
+      if (total !== "NT") {
+          const gradeTotal = total / divisionFactor; // Calculate the grade total considering division factor
+          if (gradeTotal > 10) {
+              grade = 'Error';
+          } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
+              grade = 'A';
+          } else if (gradeTotal >= 6.1 && gradeTotal <= 8) {
+              grade = 'B';
+          } else if (gradeTotal >= 4.1 && gradeTotal <= 6) {
+              grade = 'C';
+          } else if (gradeTotal >= 2.1 && gradeTotal <= 4) {
+              grade = 'D';
+          } else if (gradeTotal >= 1 && gradeTotal <= 2) {
+              grade = 'E';
+          }
+          else if (gradeTotal == 0 ) {
+            grade = ' ';
+        }
+      } else {
+          grade = total;
+      }
+
+      return {
+          ...updatedValues,
+          Dictation_total_marks: total,
+          Dictation_total_grade: grade,
+      };
+  });
+};            
+
+                     
 
   return (
 
@@ -1072,7 +1361,7 @@ Section : {current_student?.joining_details?.section?.section_name}
     className='border border-neutral-500 w-16 rounded-sm text-center'
     maxLength="3"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -1113,7 +1402,7 @@ pattern="^\d*\.?\d*$"     />
     max="10"
     min="0"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-    pattern="^\d*\.?\d*$"     
+        
     />
     </div>
 
@@ -1151,7 +1440,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
 
@@ -1188,7 +1477,7 @@ pattern="^\d*\.?\d*$"     />
   max="10"
   min="0"
   style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-  pattern="^\d*\.?\d*$" 
+  
   />
    </div>
 
@@ -1223,7 +1512,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
    <div>
@@ -1256,7 +1545,7 @@ pattern="^\d*\.?\d*$"     />
     className='border border-neutral-500 w-16 rounded-sm text-center '
     maxLength="3"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -1292,7 +1581,7 @@ pattern="^\d*\.?\d*$"     />
     max="10"
     min="0"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -1328,7 +1617,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
 
@@ -1365,7 +1654,7 @@ pattern="^\d*\.?\d*$"     />
   max="10"
   min="0"
   style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-  pattern="^\d*\.?\d*$" 
+  
   />
    </div>
 
@@ -1400,7 +1689,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$"  
+    
    />
    </div>
    <div>
@@ -1436,7 +1725,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
    <div>
@@ -1468,7 +1757,7 @@ pattern="^\d*\.?\d*$"     />
     className='border border-neutral-500 w-16 rounded-sm text-center '
     maxLength="3"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -1509,7 +1798,7 @@ pattern="^\d*\.?\d*$"     />
     max="10"
     min="0"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -1545,7 +1834,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
 
@@ -1582,7 +1871,7 @@ pattern="^\d*\.?\d*$"     />
   max="10"
   min="0"
   style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-  pattern="^\d*\.?\d*$" 
+  
   />
    </div>
 
@@ -1617,7 +1906,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
    <div>
@@ -1653,7 +1942,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
    <div>
@@ -1687,7 +1976,7 @@ pattern="^\d*\.?\d*$"     />
     className='border border-neutral-500 w-16 rounded-sm text-center '
     maxLength="3"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -1726,7 +2015,7 @@ pattern="^\d*\.?\d*$"     />
     max="10"
     min="0"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -1762,7 +2051,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
 
@@ -1799,7 +2088,7 @@ pattern="^\d*\.?\d*$"     />
   max="10"
   min="0"
   style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-  pattern="^\d*\.?\d*$" 
+  
   />
    </div>
 
@@ -1834,7 +2123,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
    <div>
@@ -1880,7 +2169,7 @@ pattern="^\d*\.?\d*$"     />
     className='border border-neutral-500 w-16 rounded-sm text-center '
     maxLength="3"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -1919,7 +2208,7 @@ pattern="^\d*\.?\d*$"     />
     max="10"
     min="0"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -1955,7 +2244,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
 
@@ -1990,7 +2279,7 @@ pattern="^\d*\.?\d*$"     />
     className='border border-neutral-500 w-16 rounded-sm text-center '
     maxLength="3"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -2026,7 +2315,7 @@ pattern="^\d*\.?\d*$"     />
     max="10"
     min="0"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -2062,7 +2351,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
 
@@ -2099,7 +2388,7 @@ pattern="^\d*\.?\d*$"     />
   max="10"
   min="0"
   style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-  pattern="^\d*\.?\d*$" 
+  
   />
    </div>
 
@@ -2131,7 +2420,7 @@ pattern="^\d*\.?\d*$"     />
     className='border border-neutral-500 w-16 rounded-sm text-center ml-28 '
     maxLength="3"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -2167,7 +2456,7 @@ pattern="^\d*\.?\d*$"     />
     max="10"
     min="0"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -2203,7 +2492,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
 
@@ -2240,7 +2529,7 @@ pattern="^\d*\.?\d*$"     />
   max="10"
   min="0"
   style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-  pattern="^\d*\.?\d*$" 
+  
   />
    </div>
 
@@ -2273,7 +2562,7 @@ pattern="^\d*\.?\d*$"     />
     className='border border-neutral-500 w-16 rounded-sm text-center '
     maxLength="3"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -2314,7 +2603,7 @@ pattern="^\d*\.?\d*$"     />
     max="10"
     min="0"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -2350,7 +2639,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$"  
+    
    />
    </div>
 
@@ -2387,7 +2676,7 @@ pattern="^\d*\.?\d*$"     />
   max="10"
   min="0"
   style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-  pattern="^\d*\.?\d*$" 
+  
   />
    </div>
 
@@ -2420,7 +2709,7 @@ pattern="^\d*\.?\d*$"     />
     className='border border-neutral-500 w-16 rounded-sm text-center'
     maxLength="3"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -2457,7 +2746,7 @@ pattern="^\d*\.?\d*$"     />
     max="10"
     min="0"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -2493,7 +2782,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
 
@@ -2530,7 +2819,7 @@ pattern="^\d*\.?\d*$"     />
   max="10"
   min="0"
   style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-  pattern="^\d*\.?\d*$" 
+  
   />
    </div>
 
@@ -2562,7 +2851,7 @@ pattern="^\d*\.?\d*$"     />
     className='border border-neutral-500 w-16 rounded-sm text-center'
     maxLength="3"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -2598,7 +2887,7 @@ pattern="^\d*\.?\d*$"     />
     max="10"
     min="0"
     style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-pattern="^\d*\.?\d*$"     />
+    />
     </div>
 
     <div>
@@ -2634,7 +2923,7 @@ pattern="^\d*\.?\d*$"     />
    max="10"
    min="0"
    style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-   pattern="^\d*\.?\d*$" 
+   
    />
    </div>
 
@@ -2671,7 +2960,7 @@ pattern="^\d*\.?\d*$"     />
   max="10"
   min="0"
   style={{ '-moz-appearance': 'textfield', 'appearance': 'textfield' }}
-  pattern="^\d*\.?\d*$" 
+  
   />
    </div>
 
@@ -2734,7 +3023,7 @@ pattern="^\d*\.?\d*$"     />
       variant="contained"
       color="primary"
       style={{ ...buttonStyle, color: current_coscholastic5to10 && current_coscholastic5to10[0]?.[term]?.status === 'Finish' ? 'gray' : 'white' }}
-      disabled={current_coscholastic5to10 && current_coscholastic5to10[0]?.[term]?.status === 'Finish'}
+      // disabled={current_coscholastic5to10 && current_coscholastic5to10[0]?.[term]?.status === 'Finish'}
       >
     Save Draft
      </Button>
@@ -2754,7 +3043,7 @@ pattern="^\d*\.?\d*$"     />
     ...buttonStyle,
     color:!isAllFieldsFilled() || (current_coscholastic5to10 && current_coscholastic5to10[0]?.[term]?.status === 'Finish') ? 'gray' : 'white'
     }}
-    disabled={ !isAllFieldsFilled() || (current_coscholastic5to10 && current_coscholastic5to10[0]?.[term]?.status === 'Finish') }
+    // disabled={ !isAllFieldsFilled() || (current_coscholastic5to10 && current_coscholastic5to10[0]?.[term]?.status === 'Finish') }
     >
   Finish
 </Button>
