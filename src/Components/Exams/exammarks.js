@@ -98,7 +98,18 @@ console.log(dataSubmitted)
 
     const handleChange = (e, studentId) => {
     const { name, value } = e.target;
-    const parsedValue = parseFloat(value);
+
+    console.log(name)
+    
+    let setValue = parseFloat(value);
+
+    if(value === "AB") {
+      setValue = 111;
+    }
+
+    console.log(setValue)
+
+    const parsedValue = parseFloat(setValue);
     const updatedMarksData = marksData.slice();
     const studentIndex = updatedMarksData.findIndex(data => data?.studentId === studentId);
   
@@ -109,45 +120,69 @@ console.log(dataSubmitted)
         subject_name: subjectName,
         assessment_name: current_exams?.type,
         marks: name === 'marks' ? parsedValue : 0,
-        grade: '',
+        grade: ''
       };
       updatedMarksData.push(newStudentData);
     } else {
       const studentData = updatedMarksData[studentIndex];
       studentData[name] = name === 'marks' ? parsedValue : value;
-      const gradingScales = {
-        // FA1: { maxMarks: 25, grades: { A: 22, B: 15, C: 10, D: 5, E: 0 } },
-        // FA2: { maxMarks: 25, grades: { A: 22, B: 15, C: 10, D: 5, E: 0 } },
-        FA1: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3,'E': 1,'NT':0 } },
-        FA2: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3,'E': 1,'NT':0 } },
-        SA1: { maxMarks: 50, grades: { 'A+': 44, 'A': 39, 'B+': 33, 'B': 28, 'C+': 22, 'C': 17, 'D+': 11,'D': 6,'E': 1,'NT':0  } },
-        TERM1: { maxMarks: 100, grades: { 'A+': 91, 'A': 81, 'B+': 71, 'B': 61, 'C+': 51, 'C': 41, 'D+': 32,'D': 20,'E': 1,'NT':0 } },
 
-        FA3: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3, 'E': 1,'NT':0 } },
-        FA4: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3,'E': 1,'NT':0 } },
-        SA2: { maxMarks: 50, grades: { 'A+': 44, 'A': 39, 'B+': 33, 'B': 28, 'C+': 22, 'C': 17, 'D+': 11,'D': 6,'E': 1,'NT':0  } },
-        TERM2: { maxMarks: 100, grades: { 'A+': 91, 'A': 81, 'B+': 71, 'B': 61, 'C+': 51, 'C': 41, 'D+': 32,'D': 20,'E': 1,'NT':0 } },
+      console.log(studentData)
 
+      let gradingScales;
 
-        FA5: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3,'E': 1,'NT':0 } },
-        FA6: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3,'E': 1,'NT':0 } },
-        SA3: { maxMarks: 50, grades: { 'A+': 44, 'A': 39, 'B+': 33, 'B': 28, 'C+': 22, 'C': 17, 'D+': 11,'D': 6,'E': 1,'NT':0  } },
-        TERM3: { maxMarks: 100, grades: { 'A+': 91, 'A': 81, 'B+': 71, 'B': 61, 'C+': 51, 'C': 41, 'D+': 32,'D': 20,'E': 1,'NT':0 } },
-
-      };
-      const gradingScale = gradingScales[current_exams?.type];
-      if (gradingScale && parsedValue >= 0 && parsedValue <= gradingScale.maxMarks) {
-      for (const [grade, threshold] of Object.entries(gradingScale.grades)) {
-      if (parsedValue >= threshold) {
-          studentData.grade = grade;
-          break;
-          }}
+      if (['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4'].includes(current_exams?.class?.class_name)) {
+        gradingScales = {
+          FA1: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3,'E': 1,'NT':0, 'AB': 111  } },
+          FA2: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3,'E': 1,'NT':0, 'AB': 111  } },
+          SA1: { maxMarks: 50, grades: { 'A+': 44, 'A': 39, 'B+': 33, 'B': 28, 'C+': 22, 'C': 17, 'D+': 11,'D': 6,'E': 1,'NT':0, 'AB': 111   } },
+          TERM1: { maxMarks: 100, grades: { 'A+': 91, 'A': 81, 'B+': 71, 'B': 61, 'C+': 51, 'C': 41, 'D+': 32,'D': 20,'E': 1,'NT':0, 'AB': 111  } },
+      
+          FA3: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3, 'E': 1,'NT':0, 'AB': 111  } },
+          FA4: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3,'E': 1,'NT':0, 'AB': 111 } },
+          SA2: { maxMarks: 50, grades: { 'A+': 44, 'A': 39, 'B+': 33, 'B': 28, 'C+': 22, 'C': 17, 'D+': 11,'D': 6,'E': 1,'NT':0  } },
+          TERM2: { maxMarks: 100, grades: { 'A+': 91, 'A': 81, 'B+': 71, 'B': 61, 'C+': 51, 'C': 41, 'D+': 32,'D': 20,'E': 1,'NT':0 } },
+      
+          FA5: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3,'E': 1,'NT':0, 'AB': 111  } },
+          FA6: { maxMarks: 25, grades: { 'A+': 22, 'A': 19, 'B+': 17, 'B': 14, 'C+': 11, 'C': 8, 'D+': 7, 'D': 3,'E': 1,'NT':0, 'AB': 111  } },
+          SA3: { maxMarks: 50, grades: { 'A+': 44, 'A': 39, 'B+': 33, 'B': 28, 'C+': 22, 'C': 17, 'D+': 11,'D': 6,'E': 1,'NT':0, 'AB': 111  } },
+          TERM3: { maxMarks: 100, grades: { 'A+': 91, 'A': 81, 'B+': 71, 'B': 61, 'C+': 51, 'C': 41, 'D+': 32,'D': 20,'E': 1,'NT':0, 'AB': 111 } }
+          };
       } else {
-        studentData.grade = <span className='text-red-500 text-xs'>Please provide proper marks</span>;
+        gradingScales = {
+          FA1: { maxMarks: 10, grades: { 'A+': 9.1, 'A': 8.1, 'B+': 7.1, 'B': 6.1, 'C+': 5.1, 'C': 4.1, 'D+': 3.2, 'D': 2,'E': 1,'NT':0 } },
+          FA2: { maxMarks: 10, grades: { 'A+': 9.1, 'A': 8.1, 'B+': 7.1, 'B': 6.1, 'C+': 5.1, 'C': 4.1, 'D+': 3.2, 'D': 2,'E': 1,'NT':0 } },
+          SA1: { maxMarks: 30, grades: { 'A+': 27, 'A': 21, 'B+': 15, 'B': 9, 'C': 1,'NT':0, 'AB': 111  } },
+          TERM1: { maxMarks: 100, grades: { 'A+': 91, 'A': 81, 'B+': 71, 'B': 61, 'C+': 51, 'C': 41, 'D+': 32,'D': 20,'E': 1,'NT':0 } }, 
+          FA3: { maxMarks: 10, grades: { 'A+': 9.1, 'A': 8.1, 'B+': 7.1, 'B': 6.1, 'C+': 5.1, 'C': 4.1, 'D+': 3.2, 'D': 2,'E': 1,'NT':0 } },
+          FA4: { maxMarks: 10, grades: { 'A+': 9.1, 'A': 8.1, 'B+': 7.1, 'B': 6.1, 'C+': 5.1, 'C': 4.1, 'D+': 3.2, 'D': 2,'E': 1,'NT':0 } },
+          SA2: { maxMarks: 30, grades: { 'A+': 27, 'A': 21, 'B+': 15, 'B': 9, 'C': 1,'NT':0 ,'AB': 111 } },
+          TERM2: { maxMarks: 100, grades: { 'A+': 91, 'A': 81, 'B+': 71, 'B': 61, 'C+': 51, 'C': 41, 'D+': 32,'D': 20,'E': 1,'NT':0 } }, 
+          FA5: { maxMarks: 10, grades: { 'A+': 9.1, 'A': 8.1, 'B+': 7.1, 'B': 6.1, 'C+': 5.1, 'C': 4.1, 'D+': 3.2, 'D': 2,'E': 1,'NT':0 } },
+          FA6: { maxMarks: 10, grades: { 'A+': 9.1, 'A': 8.1, 'B+': 7.1, 'B': 6.1, 'C+': 5.1, 'C': 4.1, 'D+': 3.2, 'D': 2,'E': 1,'NT':0 } },
+          SA3: { maxMarks: 30, grades: { 'A+': 27, 'A': 21, 'B+': 15, 'B': 9, 'C': 1,'NT':0 , 'AB': 111  } },
+          TERM3: { maxMarks: 100, grades: { 'A+': 91, 'A': 81, 'B+': 71, 'B': 61, 'C+': 51, 'C': 41, 'D+': 32,'D': 20,'E': 1,'NT':0 } }
       }
-    }  
-      setMarksData(updatedMarksData);
-      };
+    }
+      
+
+    const gradingScale = gradingScales[current_exams?.type];
+
+
+    if (gradingScale && parsedValue >= 0 && parsedValue <= gradingScale.maxMarks) {
+    for (const [grade, threshold] of Object.entries(gradingScale.grades)) {
+    if (parsedValue >= threshold) {
+        studentData.grade = grade;
+        break;
+        }}
+    } else if (studentData.marks === 111){
+      studentData.grade = "AB"; 
+    } else  {
+      studentData.grade = <span className='text-red-500 text-xs'>Please provide proper marks</span>;
+    }
+  }  
+    setMarksData(updatedMarksData);
+};
   
       const termToFilter = current_exams?.term; 
       const typeToFilter = current_exams?.type; 
@@ -280,18 +315,48 @@ console.log(dataSubmitted)
 
 
 <Box>
-  {(current_exams?.type === 'FA1' ||
-    current_exams?.type === 'FA2' ||
-    current_exams?.type === 'FA3' ||
-    current_exams?.type === 'FA4' ||
-    current_exams?.type === 'FA5' ||
-    current_exams?.type === 'FA6') && (
+  {(['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4'].includes(current_exams?.class?.class_name) &&
+    (current_exams?.type === 'FA1' ||
+      current_exams?.type === 'FA2' ||
+      current_exams?.type === 'FA3' ||
+      current_exams?.type === 'FA4' ||
+      current_exams?.type === 'FA5' ||
+      current_exams?.type === 'FA6')) && (
     <Typography>Note: Maximum marks is 25</Typography>
   )}
-  {(current_exams?.type === 'SA1' ||
-    current_exams?.type === 'SA2' ||
-    current_exams?.type === 'SA3') && (
+  {(['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4'].includes(current_exams?.class?.class_name) &&
+    (current_exams?.type === 'SA1' ||
+      current_exams?.type === 'SA2' ||
+      current_exams?.type === 'SA3')) && (
     <Typography>Note: Maximum marks is 50</Typography>
+  )}
+  {(['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4'].includes(current_exams?.class?.class_name) &&
+    (current_exams?.type === 'TERM1' ||
+      current_exams?.type === 'TERM2' ||
+      current_exams?.type === 'TERM3')) && (
+    <Typography>Note: Maximum marks is 100</Typography>
+  )}
+  {(['Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10'].includes(current_exams?.class?.class_name) &&
+    (current_exams?.type === 'FA1' ||
+      current_exams?.type === 'FA2' ||
+      current_exams?.type === 'FA3' ||
+      current_exams?.type === 'FA4' ||
+      current_exams?.type === 'FA5' ||
+      current_exams?.type === 'FA6')) && (
+    <Typography>Note: Maximum marks is 10</Typography>
+  )}
+
+{(['Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10'].includes(current_exams?.class?.class_name) &&
+    (current_exams?.type === 'SA1' ||
+      current_exams?.type === 'SA2' ||
+      current_exams?.type === 'SA3')) && (
+    <Typography>Note: Maximum marks is 30</Typography>
+  )}
+   {(['Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10'].includes(current_exams?.class?.class_name) &&
+    (current_exams?.type === 'TERM1' ||
+      current_exams?.type === 'TERM2' ||
+      current_exams?.type === 'TERM3')) && (
+    <Typography>Note: Maximum marks is 100</Typography>
   )}
 </Box>
 
@@ -334,7 +399,7 @@ console.log(dataSubmitted)
       style={{ cursor: 'pointer' }}
       onClick={() => handleEdit(index)}
       >
-      {item.marks.marks}
+      {item.marks.marks === 111 ? 'AB' : item.marks.marks }
      </span>
      )}
      </TableCell>
@@ -367,11 +432,11 @@ console.log(dataSubmitted)
     <TextField
    // label="enter marks"
      name="marks"
-     value={item.marks}
+     value={item.marks === 111 ? 'AB' : item.marks }
      onChange={(e) => handleChange(e, item._id)}
      size="small"
      style={{ width: '150px' }}
-     InputProps={{ inputProps: { maxLength: 3 } }}
+     InputProps={{ inputProps: { maxLength: 4 } }}
      error={item.marks > 125 || item.marks < 0}
      helperText={
      item.marks > 125 || item.marks < 0 ? 'Please provide marks between 0 and 100' : ''
