@@ -311,7 +311,7 @@ useEffect(() => {
       punctuation_grade: current_coscholastic1to4[0]?.[term]?.written_expression?.punctuation_correctly?.grade || '',
       sentences_marks: extractMarksAndGrade(current_coscholastic1to4, "written_expression", "complete_sentences"),
       sentences_grade: current_coscholastic1to4[0]?.[term]?.written_expression?.complete_sentences?.grade || '',
-      written_expression_total_marks: extractTotalMarksAndGrade(current_coscholastic1to4, "written_expression", "abacus_total"),
+      written_expression_total_marks: extractTotalMarksAndGrade(current_coscholastic1to4, "written_expression", "written_expression_total"),
       written_expression_total_grade: current_coscholastic1to4[0]?.[term]?.written_expression?.written_expression_total?.grade || '',
       
 
@@ -1006,21 +1006,21 @@ const onChangeTotal6 = (fieldName, value) => {
       fieldsToConsider.forEach((field) => {
           const mark = updatedValues[field];
           if (!isNaN(mark)) {
-              divisionFactor++; // Increment division factor for numeric values
+              divisionFactor++; 
           } else if (mark === "AB") {
-              divisionFactor++; // Increment division factor for "AB" marks
+              divisionFactor++; 
           }
       });
 
-      // Check if all marks are 'NT'
+    
       if (divisionFactor === 0) {
           total = "NT";
       }
 
-      // Calculate grade based on total marks
+    
       let grade = '';
       if (total !== "NT") {
-          const gradeTotal = total / divisionFactor; // Calculate the grade total considering division factor
+          const gradeTotal = total / divisionFactor; 
           if (gradeTotal > 10) {
               grade = 'Error';
           } else if (gradeTotal >= 8.1 && gradeTotal <= 10) {
