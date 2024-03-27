@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Button,  Modal,  Typography } from '@mui/material'
+import { Box, Breadcrumbs, Button,  MenuItem,  Modal,  Select,  Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { fetchOneStudent, studentSelector } from '../../api/student'
@@ -97,6 +97,7 @@ const [scholasticData, setScholasticData] = useState({
   visualise_grade:"",
   remarks:"",
   attendence:"",
+  promotion_status:"",
   reading_total_marks: 0,
   reading_total_grade: '',
   work_skills_total_marks:0,
@@ -134,7 +135,7 @@ dispatch(fetchOneCoscholastic1to4(id))
 
 const handleChange = (event) => {
   const { name, value } = event.target; 
-  if (name === "remarks" || name === "attendence") {
+  if (name === "remarks" || name === "attendence" || name === "promotion_status") {
     if (value.length <= 1500) {
       setScholasticData({
         ...scholasticData,
@@ -327,6 +328,7 @@ useEffect(() => {
 
       remarks: current_coscholastic1to4[0]?.[term]?.remarks|| '',
       attendence: current_coscholastic1to4[0]?.[term]?.attendence|| '',
+      promotion_status:current_coscholastic1to4[0]?.[term]?.promotion_status|| ''
 
     });
   }
@@ -526,6 +528,7 @@ Abacus: {
 
       remarks:scholasticData.remarks,
       attendence:scholasticData.attendence,
+      promotion_status: scholasticData.promotion_status,
       status:isCheckboxSelected ? 'Finish' : 'progress'
 
     },
@@ -2562,6 +2565,21 @@ Section : {current_student?.joining_details?.section?.section_name}
 
   />
    </div>
+
+
+   <div className="flex mt-10 gap-5">
+        <Typography className="pt-2">Promotion Status</Typography>
+        <Select
+          name="promotion_status"
+          value={scholasticData.promotion_status}
+          onChange={handleChange}          
+          size="small"
+          style={{width:'200px'}}
+        >
+          <MenuItem value="Promoted">Promoted</MenuItem>
+          <MenuItem value="Empty">Empty</MenuItem>
+        </Select>
+      </div>
 
 
 
