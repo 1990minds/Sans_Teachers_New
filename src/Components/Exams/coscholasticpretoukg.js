@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Button, Modal, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { fetchOneStudent, studentSelector } from "../../api/student";
@@ -185,7 +185,7 @@ export default function Coscholastic() {
     abacus_total_grade: "",
     written_skills_total_marks: "",
     written_skills_total_grade: "",
-
+    promotion_status:"",
     attendence: "",
     remarks: "",
   });
@@ -237,11 +237,11 @@ export default function Coscholastic() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    if (name === "remarks" || name === "attendence") {
-      if (value.length <= 1500) {
+    if (name === "remarks" || name === "attendence" || name === "promotion_status") {
+    if (value.length <= 1500) {
         setScholasticData({
-          ...scholasticData,
-          [name]: value,
+        ...scholasticData,
+        [name]: value,
         });
       }
       return;
@@ -512,6 +512,7 @@ written_skills_total_grade: current_coscholasticpretoukg[0]?.[term]?.written_ski
 
  remarks: current_coscholasticpretoukg[0]?.[term]?.remarks || "",
  attendence: current_coscholasticpretoukg[0]?.[term]?.attendence || "",
+ promotion_status: current_coscholasticpretoukg[0]?.[term]?.promotion_status || ""
     });
   }
 }, [current_coscholasticpretoukg]);
@@ -637,8 +638,9 @@ const onFinish = (e) => {
       },
       
       
-      remarks: scholasticData.remarks,
-      attendence: scholasticData.attendence,
+      remarks: scholasticData?.remarks,
+      attendence: scholasticData?.attendence,
+      promotion_status: scholasticData?.promotion_status,
       status: isCheckboxSelected ? "Finish" : "progress",
     },
    
@@ -887,7 +889,7 @@ const onChangeTotal2 = (fieldName, value) => {
       return {
           ...updatedValues,
           handwriting_total_marks: total,
-          handwriting_grade: grade,
+          handwriting_total_grade: grade,
       };
   });
 };
@@ -1680,7 +1682,12 @@ const onChangeTotal14 = (fieldName, value) => {
       };
 
       // Define the fields to be considered for calculation
-      const fieldsToConsider = ['literacy_marks', 'numeracy_marks', 'E_V_S_marks', 'kit_activity_marks'];
+      let fieldsToConsider = ['literacy_marks', 'numeracy_marks', 'E_V_S_marks',  'kit_activity_marks', ];
+console.log(fieldsToConsider)
+
+      if(!isPrepClass){
+        fieldsToConsider.push("hindi_marks")
+      }
 
       let total = 0;
       let divisionFactor = 0; // Initialize division factor
@@ -1694,6 +1701,8 @@ const onChangeTotal14 = (fieldName, value) => {
             divisionFactor++; // Increment division factor for "AB" marks
         }
     });
+
+    
 
     
 
@@ -5462,6 +5471,28 @@ Section : {current_student?.joining_details?.section?.section_name}
                   className=" border  border-neutral-500 w-50 rounded-sm text-center"
                 />
               </div>
+
+
+        <div className="flex mt-10 gap-5">
+        <Typography className="pt-2">Promotion Status</Typography>
+        <Select
+          name="promotion_status"
+          value={scholasticData.promotion_status}
+          onChange={handleChange}          
+          size="small"
+          style={{width:'200px'}}
+        >
+          <MenuItem value="Promoted">Promoted</MenuItem>
+          <MenuItem value="Empty">Empty</MenuItem>
+        </Select>
+      </div>
+
+
+
+
+
+
+
             </div>
           </div>
 
