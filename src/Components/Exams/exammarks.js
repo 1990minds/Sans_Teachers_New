@@ -158,8 +158,8 @@ console.log(dataSubmitted)
           FA4: { maxMarks: 10, grades: { 'A+': 8, 'A': 6, 'B+': 4, 'B': 2, 'C': 1,'NT':0} },
           SA2: { maxMarks: 30, grades: { 'A+': 27, 'A': 21, 'B+': 15, 'B': 9, 'C': 1,'NT':0 ,'AB': 111 } },
           TERM2: { maxMarks: 100, grades: { 'A+': 90, 'A': 70, 'B+': 50, 'B': 30, 'C': 1,'NT':0  } }, 
-          FA5: { maxMarks: 10, grades: { 'A+': 8, 'A': 6, 'B+': 4, 'B': 2, 'C': 1,'NT':0 } },
-          FA6: { maxMarks: 10, grades: { 'A+': 8, 'A': 6, 'B+': 4, 'B': 2, 'C': 1,'NT':0 } },
+          FA5: { maxMarks: 10, grades: { 'A+': 9, 'A': 7, 'B+': 5, 'B': 3, 'C': 1,'NT':0 } },
+          FA6: { maxMarks: 10, grades: { 'A+': 9, 'A': 7, 'B+': 5, 'B': 3, 'C': 1,'NT':0 } },
           SA3: { maxMarks: 30, grades: { 'A+': 27, 'A': 21, 'B+': 15, 'B': 9, 'C': 1,'NT':0 , 'AB': 111  } },
           TERM3: { maxMarks: 100, grades: {'A+': 90, 'A': 70, 'B+': 50, 'B': 30, 'C': 1,'NT':0  } }
       }
