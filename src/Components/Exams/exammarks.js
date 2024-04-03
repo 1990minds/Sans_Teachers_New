@@ -165,6 +165,7 @@ console.log(dataSubmitted)
       }
     }
       
+    
 
     const gradingScale = gradingScales[current_exams?.type];
 
